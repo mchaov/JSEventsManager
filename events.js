@@ -13,7 +13,6 @@ new uiElement({
         useCapture:         DEFAULT IS FALSE, you can pass TRUE
     });
  **
- * UI.support.defaultEvent -> set to 'click' || 'touchstart' depending on the device
  * example:
 
 new uiElement({
