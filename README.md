@@ -12,7 +12,7 @@ new uiElement({
 	    name:               NAME OF YOUR EVENT,
 	    eventHtmlElement:   PASS HTML ELEMENT,
 	    handler:            ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
-	    eventType:          EVENT TYPE || UI.support.defaultEvent,
+	    eventType:          EVENT TYPE
         useCapture:         DEFAULT IS FALSE, you can pass TRUE
     });
  **
