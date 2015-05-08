@@ -5,7 +5,7 @@
  **
  * usage:
 
-new uiElement({
+new UIElement({
 	    name:               NAME OF YOUR EVENT,
 	    eventHtmlElement:   PASS HTML ELEMENT,
 	    handler:            ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
@@ -15,7 +15,7 @@ new uiElement({
  **
  * example:
 
-new uiElement({
+new UIElement({
 	    name:               'My event',
 	    eventHtmlElement:   document.getElementById('myElement');
 	    handler:            function(){alert('it works')},
@@ -40,7 +40,7 @@ this.detach('name')                                         -> detaches other ev
  *
  * If you need to control it from somewhere else you can store the event
  * into a variable and access it from there like this:
- var myEventVariable = new uiElement({...});
+ var myEventVariable = new UIElement({...});
 
  * console.log(myEventVariable) will output the same as console.log(this)
  * from withing the event handler
@@ -49,10 +49,10 @@ this.detach('name')                                         -> detaches other ev
  * You can't attach events with the same name.
  */
 
-// This is prototype for elements that are not uiElement
+// This is prototype for elements that are not UIElement
 Element.prototype.detach = function () { }; // Element.prototype.FOO, works iOS 8.1+
 
-function uiElement(config)
+function UIElement(config)
 {
     if (!config)
     {
@@ -62,9 +62,9 @@ function uiElement(config)
 	// Self-Invoking Constructor
     // Make sure that a constructor function always behaves like one even
     // if called without `new`.
-    if (!(this instanceof uiElement))
+    if (!(this instanceof UIElement))
     {
-        return new uiElement(config);
+        return new UIElement(config);
     }
 	
     //apply configuration
@@ -80,9 +80,9 @@ function uiElement(config)
     this.init();
 }
 
-uiElement.prototype = {
-    //if someone asks, you are uiElement :)
-    constructor: 'uiElement',
+UIElement.prototype = {
+    //if someone asks, you are UIElement :)
+    constructor: 'UIElement',
 
     //main function
     init: function ()
@@ -178,6 +178,9 @@ uiElement.prototype = {
     detach: function (name)
     {
         var eventName = name === undefined ? this.eventConfig.name : name;
+        
+        //we need this to be able to find where in the array is our event
+        //so we could remove it from it
         for (var i = 0; i < this.eventHtmlElement.eventsList.length; i += 1)
         {
             //do we want to detach event different from the one which invokes this method?
@@ -187,8 +190,8 @@ uiElement.prototype = {
                 this.eventConfig.eventType = eventData[0].eventType;
                 this.eventConfig.handler = eventData[0].handler;
 
-                //if not remove myself from the array of events
             }
+            //if not remove myself from the array of events
             else if (this.eventHtmlElement.eventsList[i].name == eventName)
             {
                 this.eventHtmlElement.eventsList.splice(i, 1);
