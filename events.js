@@ -64,6 +64,13 @@ var UIElement = (function()
         Object.prototype.detach = noop;
     }
 
+    if (typeof Object.prototype.hasEvent === 'undefined')
+    {
+        // This prevents showing an error if you try to evoke the detach method of
+        // non EventObject.
+        Object.prototype.hasEvent = noop;
+    }
+
     function UIElement(config)
     {
         if (!config)
@@ -184,24 +191,24 @@ var UIElement = (function()
     //you can also detach one event from within a handler of another event
     UIElement.prototype.detach = function (name)
     {
-        var eventName = name === undefined ? this.eventConfig.name : name;
+        var eventName = name === undefined ? this.eventConfig.name : name,
+            eventData;
 
         //we need this to be able to find where in the array is our event
         //so we could remove it from it
         for (var i = 0; i < this.eventHtmlElement.eventsList.length; i += 1)
         {
-            //do we want to detach event different from the one which invokes this method?
-            if (name !== undefined && this.eventHtmlElement.eventsList[i].name == eventName)
+            if (this.eventHtmlElement.eventsList[i].name === eventName)
             {
-                var eventData = this.eventHtmlElement.eventsList.splice(i, 1);
-                this.eventConfig.eventType = eventData[0].eventType;
-                this.eventConfig.handler = eventData[0].handler;
+                //remove myself from the array of events
+                eventData = this.eventHtmlElement.eventsList.splice(i, 1);
 
-            }
-            //if not remove myself from the array of events
-            else if (this.eventHtmlElement.eventsList[i].name == eventName)
-            {
-                this.eventHtmlElement.eventsList.splice(i, 1);
+                //do we want to detach event different from the one which invokes this method?
+                if (name !== undefined)
+                {
+                    this.eventConfig.eventType = eventData[0].eventType;
+                    this.eventConfig.handler = eventData[0].handler;
+                }
             }
         }
 
