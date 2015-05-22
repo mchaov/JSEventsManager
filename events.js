@@ -6,20 +6,20 @@
  * usage:
 
 new UIElement({
-	    name:               NAME OF YOUR EVENT,
-	    eventHtmlElement:   PASS HTML ELEMENT,
-	    handler:            ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
-	    eventType:          EVENT TYPE
+        name:               NAME OF YOUR EVENT,
+        eventHtmlElement:   PASS HTML ELEMENT,
+        handler:            ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
+        eventType:          EVENT TYPE
         useCapture:         DEFAULT IS FALSE, you can pass TRUE
     });
  **
  * example:
 
 new UIElement({
-	    name:               'My event',
-	    eventHtmlElement:   document.getElementById('myElement');
-	    handler:            function(){alert('it works')},
-	    eventType:          'click'
+        name:               'My event',
+        eventHtmlElement:   document.getElementById('myElement');
+        handler:            function(){alert('it works')},
+        eventType:          'click'
     });
 
 document.getElementById('myElement').hasEvent(EVENT NAME);  -> true or false
@@ -49,54 +49,61 @@ this.detach('name')                                         -> detaches other ev
  * You can't attach events with the same name.
  */
 
-// This is prototype for elements that are not UIElement
-Element.prototype.detach = function () { }; // Element.prototype.FOO, works iOS 8.1+
-
-function UIElement(config)
+var UIElement = (function()
 {
-    if (!config)
+    'use strict';
+
+    // Empty function
+    function noop() {}
+
+    if (typeof Object.prototype.detach === 'undefined')
     {
-        return false;
+        // This prevents showing an error if you try to evoke the detach method of
+        // non EventObject.
+        // NOTE: Element.prototype.foo works in iOS 8.1+
+        Object.prototype.detach = noop;
     }
-    
-	// Self-Invoking Constructor
-    // Make sure that a constructor function always behaves like one even
-    // if called without `new`.
-    if (!(this instanceof UIElement))
+
+    function UIElement(config)
     {
-        return new UIElement(config);
+        if (!config)
+        {
+            return false;
+        }
+
+        // Self-Invoking Constructor
+        // Make sure that a constructor function always behaves like one even
+        // if called without `new`.
+        if (!(this instanceof UIElement))
+        {
+            return new UIElement(config);
+        }
+
+        // Apply configuration
+        this.eventHtmlElement = config.eventHtmlElement;
+
+        this.eventConfig = {
+            name: config.name,
+            eventType: config.eventType,
+            handler: config.handler === undefined ? false : config.handler,
+            useCapture: config.useCapture === undefined ? false : config.useCapture
+        };
+
+        this.init();
     }
-	
-    //apply configuration
-    this.eventHtmlElement = config.eventHtmlElement;
-
-    this.eventConfig = {
-        useCapture: config.useCapture === undefined ? false : config.useCapture,
-        name: config.name,
-        handler: config.handler === undefined ? false : config.handler,
-        eventType: config.eventType
-    };
-
-    this.init();
-}
-
-UIElement.prototype = {
-    //if someone asks, you are UIElement :)
-    constructor: 'UIElement',
 
     //main function
-    init: function ()
+    UIElement.prototype.init = function ()
     {
         //if HTML element is not UI element
         if (!this.eventHtmlElement.eventsList)
         {
-
             //add array to store events
             this.eventHtmlElement.eventsList = [];
 
             //extend model for this element with 'events'
-            Object.defineProperty(this.eventHtmlElement, 'events', {
-
+            Object.defineProperty(this.eventHtmlElement, 'events',
+            {
                 //if no value passed return all values stored
                 get: function ()
                 {
@@ -110,13 +117,13 @@ UIElement.prototype = {
                 }
             });
 
-            //enables us to check if a specific event is attached by name
+            // nables us to check if a specific event is attached by name
             this.eventHtmlElement.hasEvent = function (name)
             {
                 for (var i = 0; i < this.eventsList.length; i += 1)
                 {
                     if (this.eventsList[i].name == name)
-                {
+                    {
                         return true;
                     }
                 }
@@ -161,7 +168,7 @@ UIElement.prototype = {
                 return false;
             };
         }
-		//if this event exist ... do nothing
+        //if this event exist ... do nothing
         else if (this.eventHtmlElement.hasEvent(this.eventConfig.name))
         {
             return false;
@@ -171,14 +178,14 @@ UIElement.prototype = {
         this.eventConfig.handler = this.eventConfig.handler.bind(this);
         this.eventHtmlElement.addEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
         this.eventHtmlElement.events = this.eventConfig;
-    },
+    };
 
     //detach event method called from the event object stored in a variable
     //you can also detach one event from within a handler of another event
-    detach: function (name)
+    UIElement.prototype.detach = function (name)
     {
         var eventName = name === undefined ? this.eventConfig.name : name;
-        
+
         //we need this to be able to find where in the array is our event
         //so we could remove it from it
         for (var i = 0; i < this.eventHtmlElement.eventsList.length; i += 1)
@@ -200,5 +207,7 @@ UIElement.prototype = {
 
         //detach the event
         this.eventHtmlElement.removeEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
-    }
-};
+    };
+
+    return UIElement;
+}());
