@@ -31,6 +31,7 @@
  //inside the events handler
  this.detach()                                               -> detaches self
  this.detach('name')                                         -> detaches other event
+ this.trigger()                                         	 -> triggers self
 
  * Inside the event handler 'this' refers to the event attached
  * and stores its configuration and a reference to the HTML element.
