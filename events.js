@@ -56,25 +56,41 @@ var UIEvent = ( function() {
 
         // Empty function
         function noop() {
+			return false;
         }
 
-        if ( typeof Object.prototype.detach === 'undefined') {
+		if ( typeof Object.prototype.detach === 'undefined') {
             // This prevents showing an error if you try to evoke the detach method of
             // non EventObject.
             // NOTE: Element.prototype.foo works in iOS 8.1+
-            Object.prototype.detach = noop;
+            Object.defineProperty(Object.prototype, 'detach', {
+                writable: true,
+                enumerable: false,
+                configurable: true,
+                value: noop
+            });
         }
 
         if ( typeof Object.prototype.hasEvent === 'undefined') {
             // This prevents showing an error if you try to evoke the detach method of
             // non EventObject.
-            Object.prototype.hasEvent = noop;
+            Object.defineProperty(Object.prototype, 'hasEvent', {
+                writable: true,
+                enumerable: false,
+                configurable: true,
+                value: noop
+            });
         }
-
+		
         if ( typeof Object.prototype.trigger === 'undefined') {
             // This prevents showing an error if you try to evoke the detach method of
             // non EventObject.
-            Object.prototype.trigger = noop;
+            Object.defineProperty(Object.prototype, 'trigger', {
+                writable: true,
+                enumerable: false,
+                configurable: true,
+                value: noop
+            });
         }
 		
         function UIEvent(config) {
