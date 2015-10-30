@@ -71,6 +71,12 @@ var UIEvent = ( function() {
             Object.prototype.hasEvent = noop;
         }
 
+        if ( typeof Object.prototype.trigger === 'undefined') {
+            // This prevents showing an error if you try to evoke the detach method of
+            // non EventObject.
+            Object.prototype.trigger = noop;
+        }
+		
         function UIEvent(config) {
             if (!config) {
                 return false;
