@@ -101,7 +101,7 @@ var UIEvent = ( function() {
             // Self-Invoking Constructor
             // Make sure that a constructor function always behaves like one even
             // if called without `new`.
-            if (!(this instanceof UIEvent)) {
+            if ((this instanceof UIEvent) === false) {
                 return new UIEvent(config);
             }
 
@@ -121,7 +121,7 @@ var UIEvent = ( function() {
         //main function
         UIEvent.prototype.init = function() {
             //if HTML element is not UI element
-            if (!this.eventHtmlElement.eventsList) {
+            if (this.eventHtmlElement.eventsList === undefined) {
 
                 //extend model for this element with 'events'
                 Object.defineProperties(this.eventHtmlElement, {
@@ -134,7 +134,7 @@ var UIEvent = ( function() {
                         value : []
                     },
 
-                    //shortcut to add new or get all events
+                    //short-cut to add new or get all events
                     'events' : {
                         enumerable : false,
                         configurable : false,
@@ -166,7 +166,7 @@ var UIEvent = ( function() {
                         }
                     },
 
-                    //еnables us to check if a specific event is attached by name
+                    //enables us to check if a specific event is attached by name
                     //if the event exist it returns the event, if not - false
                     'hasEvent' : {
                         writable : false,
@@ -207,9 +207,9 @@ var UIEvent = ( function() {
                                 this.eventsList = [];
 
                                 //check for and detach if event is attached
-                            } else if (this.hasEvent(name)) {
+                            } else if (this.hasEvent(name) === true) {
                                 for ( i = 0; i < this.eventsList.length; i += 1) {
-                                    if (this.eventsList[i].name == name) {
+                                    if (this.eventsList[i].name === name) {
                                         ev = this.eventsList.splice(i, 1)[0];
                                         useCapture = ev.useCapture;
                                         eventType = ev.eventType;
@@ -225,7 +225,7 @@ var UIEvent = ( function() {
                     }
                 });
             }
-            //if this event exist ... do nothing
+            //if this is initialized element ... do nothing
             else if (this.eventHtmlElement.hasEvent(this.eventConfig.name)) {
                 return false;
             }
