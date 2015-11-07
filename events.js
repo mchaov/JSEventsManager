@@ -6,20 +6,20 @@
  * usage:
 
  new UIEvent({
-	 name:               NAME OF YOUR EVENT,
-	 eventHtmlElement:   PASS HTML ELEMENT,
-	 handler:            ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
-	 eventType:          EVENT TYPE
-	 useCapture:         DEFAULT IS FALSE, you can pass TRUE
+	 name:          NAME OF YOUR EVENT,
+	 htmlRef:		PASS HTML ELEMENT,
+	 handler:		ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
+	 eventType:		EVENT TYPE
+	 useCapture:	DEFAULT IS FALSE, you can pass TRUE
  });
  **
  * example:
 
  new UIEvent({
-     name:               'My event',
-     eventHtmlElement:   document.getElementById('myElement'),
-     handler:            function(){alert('it works')},
-     eventType:          'click'
+     name:		'My event',
+     htmlRef:	document.getElementById('myElement'),
+     handler:	function(){alert('it works')},
+     eventType:	'click'
  });
 
  document.getElementById('myElement').hasEvent(EVENT NAME);  -> HANDLER or false
@@ -37,7 +37,7 @@
  * and stores its configuration and a reference to the HTML element.
  **
  * You can detach these events from within the handler like this:
- this.eventHtmlElement.detach(this.eventConfig.name)
+ this.htmlRef.detach(this.eventConfig.name)
 
  *
  * If you need to control it from somewhere else you can store the event
@@ -106,7 +106,7 @@ var UIEvent = ( function() {
             }
 
             // Apply configuration
-            this.eventHtmlElement = config.eventHtmlElement;
+            this.htmlRef = config.htmlRef;
 
             this.eventConfig = {
                 name : config.name,
@@ -121,10 +121,10 @@ var UIEvent = ( function() {
         //main function
         UIEvent.prototype.init = function() {
             //if HTML element is not UI element
-            if (this.eventHtmlElement.eventsList === undefined) {
+            if (this.htmlRef.eventsList === undefined) {
 
                 //extend model for this element with 'events'
-                Object.defineProperties(this.eventHtmlElement, {
+                Object.defineProperties(this.htmlRef, {
 
                     //add array to store events
                     'eventsList' : {
@@ -226,14 +226,14 @@ var UIEvent = ( function() {
                 });
             }
             //if this is initialized element ... do nothing
-            else if (this.eventHtmlElement.hasEvent(this.eventConfig.name)) {
+            else if (this.htmlRef.hasEvent(this.eventConfig.name)) {
                 return false;
             }
 
             //pass scope, apply event, save configuration for future uses
             this.eventConfig.handler = this.eventConfig.handler.bind(this);
-            this.eventHtmlElement.addEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
-            this.eventHtmlElement.events = this.eventConfig;
+            this.htmlRef.addEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
+            this.htmlRef.events = this.eventConfig;
         };
 
 
@@ -251,10 +251,10 @@ var UIEvent = ( function() {
 
                     //we need this to be able to find where in the array is our event
                     //so we could remove it from it
-                    for (var i = 0; i < this.eventHtmlElement.eventsList.length; i += 1) {
-                        if (this.eventHtmlElement.eventsList[i].name === eventName) {
+                    for (var i = 0; i < this.htmlRef.eventsList.length; i += 1) {
+                        if (this.htmlRef.eventsList[i].name === eventName) {
                             //remove myself from the array of events
-                            eventData = this.eventHtmlElement.eventsList.splice(i, 1);
+                            eventData = this.htmlRef.eventsList.splice(i, 1);
 
                             //do we want to detach event different from the one which invokes this method?
                             if (name !== undefined) {
@@ -266,7 +266,7 @@ var UIEvent = ( function() {
                     }
 
                     //detach the event
-                    this.eventHtmlElement.removeEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
+                    this.htmlRef.removeEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
                 }
             },
 
