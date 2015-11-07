@@ -9,7 +9,7 @@
 	 name:          NAME OF YOUR EVENT,
 	 htmlRef:		PASS HTML ELEMENT,
 	 handler:		ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
-	 eventType:		EVENT TYPE
+	 type:			EVENT TYPE
 	 useCapture:	DEFAULT IS FALSE, you can pass TRUE
  });
  **
@@ -19,7 +19,7 @@
      name:		'My event',
      htmlRef:	document.getElementById('myElement'),
      handler:	function(){alert('it works')},
-     eventType:	'click'
+     type:		'click'
  });
 
  document.getElementById('myElement').hasEvent(EVENT NAME);  -> HANDLER or false
@@ -110,7 +110,7 @@ var UIEvent = ( function() {
 
             this.eventConfig = {
                 name : config.name,
-                eventType : config.eventType,
+                type : config.type,
                 handler : config.handler === undefined ? false : config.handler,
                 useCapture : config.useCapture === undefined ? false : config.useCapture
             };
@@ -191,7 +191,7 @@ var UIEvent = ( function() {
                         value : function(name) {
                             var i,
                                 ev,
-                                eventType,
+                                type,
                                 handler,
                                 useCapture;
 
@@ -199,10 +199,10 @@ var UIEvent = ( function() {
                             if (name === undefined || name === '') {
                                 for ( i = 0; i < this.eventsList.length; i += 1) {
                                     ev = this.eventsList[i];
-                                    eventType = ev.eventType;
+                                    type = ev.type;
                                     handler = ev.handler;
                                     useCapture = ev.useCapture;
-                                    this.removeEventListener(eventType, handler, useCapture);
+                                    this.removeEventListener(type, handler, useCapture);
                                 }
                                 this.eventsList = [];
 
@@ -212,11 +212,11 @@ var UIEvent = ( function() {
                                     if (this.eventsList[i].name === name) {
                                         ev = this.eventsList.splice(i, 1)[0];
                                         useCapture = ev.useCapture;
-                                        eventType = ev.eventType;
+                                        type = ev.type;
                                         handler = ev.handler;
                                     }
                                 }
-                                this.removeEventListener(eventType, handler, useCapture);
+                                this.removeEventListener(type, handler, useCapture);
                             }
 
                             //if proper condition is not met
@@ -232,7 +232,7 @@ var UIEvent = ( function() {
 
             //pass scope, apply event, save configuration for future uses
             this.eventConfig.handler = this.eventConfig.handler.bind(this);
-            this.htmlRef.addEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
+            this.htmlRef.addEventListener(this.eventConfig.type, this.eventConfig.handler, this.eventConfig.useCapture);
             this.htmlRef.events = this.eventConfig;
         };
 
@@ -258,7 +258,7 @@ var UIEvent = ( function() {
 
                             //do we want to detach event different from the one which invokes this method?
                             if (name !== undefined) {
-                                this.eventConfig.eventType = eventData[0].eventType;
+                                this.eventConfig.type = eventData[0].type;
                                 this.eventConfig.handler = eventData[0].handler;
                             }
                         }
@@ -266,7 +266,7 @@ var UIEvent = ( function() {
                     }
 
                     //detach the event
-                    this.htmlRef.removeEventListener(this.eventConfig.eventType, this.eventConfig.handler, this.eventConfig.useCapture);
+                    this.htmlRef.removeEventListener(this.eventConfig.type, this.eventConfig.handler, this.eventConfig.useCapture);
                 }
             },
 
