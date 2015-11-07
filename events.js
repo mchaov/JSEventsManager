@@ -207,7 +207,7 @@ var UIEvent = ( function() {
                                 this.eventsList = [];
 
                                 //check for and detach if event is attached
-                            } else if (this.hasEvent(name) === true) {
+                            } else if (this.hasEvent(name)) {
                                 for ( i = 0; i < this.eventsList.length; i += 1) {
                                     if (this.eventsList[i].name === name) {
                                         ev = this.eventsList.splice(i, 1)[0];
