@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head></head>
+	<body>
+		BODY
+		<script src="events.js"></script>
+		<script>
+			function test(){
+				this.asd = 1;
+			}
+			
+			var t2 = {
+				a : 2
+			}
+			
+			function tst(){
+				console.log(this.eventConfig.name);
+			}
+			
+			var a = new UIEvent({
+				 name:      'evt',
+				 htmlRef:   document.body,
+				 handler:	tst,
+				 type: 'click'
+			 });
+			 new UIEvent({
+				 name:      'evt2',
+				 htmlRef:   document.body,
+				 handler:	tst,
+				 type: 'click'
+			 });
+			 new UIEvent({
+				 name:      'evt3',
+				 htmlRef:   document.body,
+				 handler:	tst,
+				 type: 'click'
+			 });
+		</script>
+	</body>
+</html>

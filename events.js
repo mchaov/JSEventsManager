@@ -93,6 +93,48 @@ var UIEvent = ( function() {
             });
         }
 		
+		function detachEvent(name) {
+	        var i, ev, type, handler, useCapture;
+	        console.log(this);
+	
+	        //detach all events if no event specified
+	        if (name === undefined || name === '') {
+	        	
+	        	for(i in this.eventsList) {
+	        		ev = this.eventsList[i];
+	                type = ev.type;
+	                handler = ev.handler;
+	                useCapture = ev.useCapture;
+	        		this.removeEventListener(type, handler, useCapture);
+	        	}
+	            this.eventsList = {};
+	
+	        //check for and detach if event is attached
+	        } else if (this.hasEvent(name)) {
+	            ev = this.hasEvent(name);
+	            useCapture = ev.useCapture;
+	            type = ev.type;
+	            handler = ev.handler;
+	            this.removeEventListener(type, handler, useCapture);
+	            delete this.eventsList[name];
+	        }
+	
+	        //if proper condition is not met
+	        return this.eventsList;
+	    }
+	    
+	    function hasEvent(name) {
+	    	return typeof this.eventsList[name] === 'object' ? this.eventsList[name] : false;
+	    }
+	    
+	    function triggerEvent(name) {
+	        var evt = this.hasEvent(name);
+	        if ( typeof evt.handler === 'function') {
+	            return evt.handler();
+	        }
+	        return false;
+	    }
+		
         function UIEvent(config) {
             if (!config) {
                 return false;
@@ -131,7 +173,7 @@ var UIEvent = ( function() {
                         writable : true,
                         enumerable : false,
                         configurable : false,
-                        value : []
+                        value : {}
                     },
 
                     //short-cut to add new or get all events
@@ -146,7 +188,7 @@ var UIEvent = ( function() {
 
                         //if value is passed, push into the array
                         set : function(e) {
-                            this.eventsList.push(e);
+                            return this.eventsList[e.name] = e;
                         }
                     },
 
@@ -155,15 +197,7 @@ var UIEvent = ( function() {
                         writable : false,
                         enumerable : false,
                         configurable : false,
-                        value : function(name) {
-                            var evt = this.hasEvent(name);
-
-                            if ( typeof evt.handler === 'function') {
-                                return evt.handler();
-                            }
-
-                            return false;
-                        }
+                        value : triggerEvent
                     },
 
                     //enables us to check if a specific event is attached by name
@@ -172,15 +206,7 @@ var UIEvent = ( function() {
                         writable : false,
                         enumerable : false,
                         configurable : false,
-                        value : function(name) {
-                            for (var i = 0; i < this.eventsList.length; i += 1) {
-                                if (this.eventsList[i].name === name) {
-                                    return this.eventsList[i];
-                                }
-                            }
-
-                            return false;
-                        }
+                        value : hasEvent
                     },
 
                     //enables us to detach specific or all events
@@ -188,44 +214,11 @@ var UIEvent = ( function() {
                         writable : false,
                         enumerable : false,
                         configurable : false,
-                        value : function(name) {
-                            var i,
-                                ev,
-                                type,
-                                handler,
-                                useCapture;
-
-                            //detach all events if no event specified
-                            if (name === undefined || name === '') {
-                                for ( i = 0; i < this.eventsList.length; i += 1) {
-                                    ev = this.eventsList[i];
-                                    type = ev.type;
-                                    handler = ev.handler;
-                                    useCapture = ev.useCapture;
-                                    this.removeEventListener(type, handler, useCapture);
-                                }
-                                this.eventsList = [];
-
-                                //check for and detach if event is attached
-                            } else if (this.hasEvent(name)) {
-                                for ( i = 0; i < this.eventsList.length; i += 1) {
-                                    if (this.eventsList[i].name === name) {
-                                        ev = this.eventsList.splice(i, 1)[0];
-                                        useCapture = ev.useCapture;
-                                        type = ev.type;
-                                        handler = ev.handler;
-                                    }
-                                }
-                                this.removeEventListener(type, handler, useCapture);
-                            }
-
-                            //if proper condition is not met
-                            return false;
-                        }
+                        value : detachEvent
                     }
                 });
             }
-            //if this is initialized element ... do nothing
+            //if this is initialized event ... do nothing
             else if (this.htmlRef.hasEvent(this.eventConfig.name)) {
                 return false;
             }
@@ -245,28 +238,8 @@ var UIEvent = ( function() {
                 writable: false,
                 enumerable: false,
                 configurable: false,
-                value: function(name) {
-                    var eventName = name === undefined ? this.eventConfig.name : name,
-                        eventData;
-
-                    //we need this to be able to find where in the array is our event
-                    //so we could remove it from it
-                    for (var i = 0; i < this.htmlRef.eventsList.length; i += 1) {
-                        if (this.htmlRef.eventsList[i].name === eventName) {
-                            //remove myself from the array of events
-                            eventData = this.htmlRef.eventsList.splice(i, 1);
-
-                            //do we want to detach event different from the one which invokes this method?
-                            if (name !== undefined) {
-                                this.eventConfig.type = eventData[0].type;
-                                this.eventConfig.handler = eventData[0].handler;
-                            }
-                        }
-
-                    }
-
-                    //detach the event
-                    this.htmlRef.removeEventListener(this.eventConfig.type, this.eventConfig.handler, this.eventConfig.useCapture);
+                value: function(name){
+                	return detachEvent.call(this.htmlRef, name);
                 }
             },
 
@@ -275,12 +248,8 @@ var UIEvent = ( function() {
                 writable: false,
                 enumerable: false,
                 configurable: false,
-                value: function() {
-                    if(typeof this.eventConfig.handler === 'function') {
-                        return this.eventConfig.handler();
-                    }
-
-                    return false;
+                value: function(name) {
+                	return triggerEvent.call(this.htmlRef, name || this.eventConfig.name);
                 }
             }
 
