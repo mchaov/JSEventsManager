@@ -32,6 +32,7 @@
  this.detach()                                               -> detaches self
  this.detach('name')                                         -> detaches other event
  this.trigger()                                         	 -> triggers self
+ this.trigger('name')                                        -> triggers other event
 
  * Inside the event handler 'this' refers to the event attached
  * and stores its configuration and a reference to the HTML element.
@@ -66,6 +67,7 @@ var UIEvent = ( function() {
 				handler = ev.handler;
 				useCapture = ev.useCapture;
 				this.removeEventListener(type, handler, useCapture);
+				delete this.eventsList[name];
 			}
 			this.eventsList = {};
 
