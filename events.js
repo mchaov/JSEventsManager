@@ -54,31 +54,31 @@
 
 var UIEvent = ( function() {
 	'use strict';
+    
+	function removeEvent(name) {
+        var ev, type, handler, useCapture;
+        ev = this.events[name];
+        useCapture = ev.useCapture;
+        type = ev.type;
+        handler = ev.handler;
+        this.removeEventListener(type, handler, useCapture);
+        delete this.eventsList[name];
+    }
 	
 	function detachEvent(name) {
-		var i, ev, type, handler, useCapture;
+		var i;
 
 		//detach all events if no event specified
 		if (name === undefined || name === '') {
 			
 			for(i in this.eventsList) {
-				ev = this.eventsList[i];
-				type = ev.type;
-				handler = ev.handler;
-				useCapture = ev.useCapture;
-				this.removeEventListener(type, handler, useCapture);
-				delete this.eventsList[name];
+				removeEvent.call(this, i);
 			}
 			this.eventsList = {};
 
 		//check for and detach if event is attached
 		} else if (this.hasEvent(name)) {
-			ev = this.hasEvent(name);
-			useCapture = ev.useCapture;
-			type = ev.type;
-			handler = ev.handler;
-			this.removeEventListener(type, handler, useCapture);
-			delete this.eventsList[name];
+			removeEvent.call(this, name);
 		}
 
 		//if proper condition is not met
