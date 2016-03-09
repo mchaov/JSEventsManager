@@ -5,7 +5,7 @@
  **
  * usage:
 
- new UIEvent({
+ new UIElement({
 	 name:          NAME OF YOUR EVENT,
 	 htmlRef:		PASS HTML ELEMENT,
 	 handler:		ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
@@ -15,7 +15,7 @@
  **
  * example:
 
- new UIEvent({
+ new UIElement({
      name:		'My event',
      htmlRef:	document.getElementById('myElement'),
      handler:	function(){alert('it works')},
@@ -43,18 +43,35 @@
  *
  * If you need to control it from somewhere else you can store the event
  * into a variable and access it from there like this:
- var myEventVariable = new UIEvent({...});
+ var myEventVariable = new UIElement({...});
 
  * console.log(myEventVariable) will output the same as console.log(this)
- * from withing the event handler
+ * from within the event handler
  *
  * Proper FOR/WHILE loop attach of events - the class is handling the check for that.
  * You can't attach events with the same name.
  */
 
-var UIEvent = ( function() {
+var UIElement = ( function() {
 	'use strict';
     
+    function addToProto(prop, value)
+    {
+        Window.prototype[prop]   = value;
+        Document.prototype[prop] = value;
+        Element.prototype[prop]  = value;
+    }
+
+    function uiElementPreInit()
+    {
+        return false;
+    }
+
+    addToProto('trigger', uiElementPreInit);
+    addToProto('hasEvent', uiElementPreInit);
+    addToProto('detach', uiElementPreInit);
+    addToProto('events', false);
+	
 	function removeEvent(name) {
         var ev, type, handler, useCapture;
         ev = this.events[name];
@@ -97,7 +114,7 @@ var UIEvent = ( function() {
 		return false;
 	}
 	
-	function UIEvent(config) {
+	function UIElement(config) {
 		if (!config) {
 			return false;
 		}
@@ -105,8 +122,8 @@ var UIEvent = ( function() {
 		// Self-Invoking Constructor
 		// Make sure that a constructor function always behaves like one even
 		// if called without `new`.
-		if ((this instanceof UIEvent) === false) {
-			return new UIEvent(config);
+		if ((this instanceof UIElement) === false) {
+			return new UIElement(config);
 		}
 
 		// Apply configuration
@@ -123,7 +140,7 @@ var UIEvent = ( function() {
 	}
 
 	//main function
-	UIEvent.prototype.init = function() {
+	UIElement.prototype.init = function() {
 		//if HTML element is not UI element
 		if (this.htmlRef.eventsList === undefined) {
 
@@ -192,7 +209,7 @@ var UIEvent = ( function() {
 	};
 
 
-	Object.defineProperties(UIEvent.prototype, {
+	Object.defineProperties(UIElement.prototype, {
 
 		//detach event method called from the event object stored in a variable
 		//you can also detach one event from within a handler of another event
@@ -217,5 +234,5 @@ var UIEvent = ( function() {
 
 	});
 
-	return UIEvent;
+	return UIElement;
 }());
