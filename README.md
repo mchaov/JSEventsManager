@@ -38,7 +38,7 @@ JavaScript DOM events are becoming unmanageable over time.
 # Examples
 
 ## Explanation of structure
-UIElement({
+`UIElement({
 	//mandatory
 	name:			{STRING} - name of event
 	htmlRef:		{HTMLElement} - one element passed by reference
@@ -48,10 +48,10 @@ UIElement({
 	//optional
 	useCapture:		{BOOL} - 'false' || 'true'
 	context:		{OBJECT} - 'this' || passed custom context
-});
+});`
 
 ## Method 1
-
+`
 var htmlRef = document.getElementById('myElement');
 UIElement({
 	name:		'My event',
@@ -65,10 +65,10 @@ htmlRef.hasEvent(EVENT NAME);  -> HANDLER or false
 htmlRef.detach(EVENT NAME);    -> detaches the requested event
 htmlRef.detach();              -> detaches all events
 htmlRef.trigger(EVENT NAME)    -> calls the handler
-
+`
 
 ## Method 2
-var foo = new UIElement({
+`var foo = new UIElement({
 	name:		'My event',
 	htmlRef:	htmlRef,
 	handler:	bar,
@@ -102,9 +102,4 @@ foo.eventConfig.htmlRef.hasEvent(EVENT NAME);
 foo.eventConfig.htmlRef.detach(EVENT NAME);
 foo.eventConfig.htmlRef.detach();
 foo.eventConfig.htmlRef.events
-foo.eventConfig.htmlRef.trigger(EVENT NAME)
-
-
-
-
-
+foo.eventConfig.htmlRef.trigger(EVENT NAME)`
