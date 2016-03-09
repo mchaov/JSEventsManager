@@ -6,11 +6,15 @@
  * usage:
 
  new UIElement({
+	 //mandatory
 	 name:          NAME OF YOUR EVENT,
 	 htmlRef:		PASS HTML ELEMENT,
 	 handler:		ANONYMOS FUNCTION OR FUNCTION PASSED BY REF,
 	 type:			EVENT TYPE
-	 useCapture:	DEFAULT IS FALSE, you can pass TRUE
+	 
+	 //optional
+	 useCapture:	DEFAULT IS FALSE, you can pass TRUE,
+	 context:		DEFAULT IS 'this', you can pass new context if needed
  });
  **
  * example:
@@ -133,7 +137,8 @@ var UIElement = ( function() {
 			name : config.name,
 			type : config.type,
 			handler : config.handler === undefined ? false : config.handler,
-			useCapture : config.useCapture === undefined ? false : config.useCapture
+			useCapture : config.useCapture === undefined ? false : config.useCapture,
+			context : config.context || false
 		};
 
 		this.init();
@@ -203,7 +208,7 @@ var UIElement = ( function() {
 		}
 
 		//pass scope, apply event, save configuration for future uses
-		this.eventConfig.handler = this.eventConfig.handler.bind(this);
+		this.eventConfig.handler = this.eventConfig.handler.bind(this.eventConfig.context || this);
 		this.htmlRef.addEventListener(this.eventConfig.type, this.eventConfig.handler, this.eventConfig.useCapture);
 		this.htmlRef.events = this.eventConfig;
 	};

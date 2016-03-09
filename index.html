@@ -5,36 +5,24 @@
 		BODY
 		<script src="events.js"></script>
 		<script>
-			function test(){
-				this.asd = 1;
+			function foo(){
+				console.log(this);
 			}
 			
-			var t2 = {
-				a : 2
-			}
-			
-			function tst(){
-				console.log(this.eventConfig.name);
-			}
-			
+			UIElement({
+				name:      'bar-1',
+				htmlRef:   document.body,
+				handler:	foo,
+				type: 'click'
+			});
+
 			var a = new UIElement({
-				 name:      'evt',
-				 htmlRef:   document.body,
-				 handler:	tst,
-				 type: 'click'
-			 });
-			 new UIElement({
-				 name:      'evt2',
-				 htmlRef:   document.body,
-				 handler:	tst,
-				 type: 'click'
-			 });
-			 new UIElement({
-				 name:      'evt3',
-				 htmlRef:   document.body,
-				 handler:	tst,
-				 type: 'click'
-			 });
+				name:      'bar-2',
+				htmlRef:   document.body,
+				handler:	foo,
+				type: 'click',
+				context: 'new context'
+			});
 		</script>
 	</body>
 </html>
