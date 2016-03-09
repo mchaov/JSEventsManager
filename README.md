@@ -38,7 +38,8 @@ JavaScript DOM events are becoming unmanageable over time.
 # Examples
 
 ## Explanation of structure
-`UIElement({
+```javascript
+UIElement({
 	//mandatory
 	name:			{STRING} - name of event
 	htmlRef:		{HTMLElement} - one element passed by reference
@@ -48,10 +49,11 @@ JavaScript DOM events are becoming unmanageable over time.
 	//optional
 	useCapture:		{BOOL} - 'false' || 'true'
 	context:		{OBJECT} - 'this' || passed custom context
-});`
+});
+```
 
 ## Method 1
-`
+```javascript
 var htmlRef = document.getElementById('myElement');
 UIElement({
 	name:		'My event',
@@ -60,15 +62,16 @@ UIElement({
 	type:		'click'
 });
 
-htmlRef.events                 -> returns object with attached events as properties
-htmlRef.hasEvent(EVENT NAME);  -> HANDLER or false
-htmlRef.detach(EVENT NAME);    -> detaches the requested event
-htmlRef.detach();              -> detaches all events
-htmlRef.trigger(EVENT NAME)    -> calls the handler
-`
+htmlRef.events                 // returns object with attached events as properties
+htmlRef.hasEvent(EVENT NAME);  // HANDLER or false
+htmlRef.detach(EVENT NAME);    // detaches the requested event
+htmlRef.detach();              // detaches all events
+htmlRef.trigger(EVENT NAME)    // calls the handler
+```
 
 ## Method 2
-`var foo = new UIElement({
+```javascript
+var foo = new UIElement({
 	name:		'My event',
 	htmlRef:	htmlRef,
 	handler:	bar,
@@ -76,23 +79,25 @@ htmlRef.trigger(EVENT NAME)    -> calls the handler
 });
 
 function bar(){
-	this.eventConfig		-> {context, handler, htmlRef, name, type, useCapture}
+	this.eventConfig		// {context, handler, htmlRef, name, type, useCapture}
 	
-	this.detach()			-> detaches self
-	this.detach('name')		-> detaches other event
+	this.detach()			// detaches self
+	this.detach('name')		// detaches other event
 	
-	this.trigger()			-> triggers self
-	this.trigger('name')	-> triggers other event
+	this.trigger()			// triggers self
+	this.trigger('name')	// triggers other event
 	
 	//this will work as well
-	this.eventConfig.htmlRef.hasEvent(EVENT NAME);  -> HANDLER or false
-	this.eventConfig.htmlRef.detach(EVENT NAME);    -> detaches the requested event
-	this.eventConfig.htmlRef.detach();              -> detaches all events
-	this.eventConfig.htmlRef.events                 -> returns object with attached events as properties
-	this.eventConfig.htmlRef.trigger(EVENT NAME)    -> calls the handler
+	this.eventConfig.htmlRef.hasEvent(EVENT NAME);  // HANDLER or false
+	this.eventConfig.htmlRef.detach(EVENT NAME);    // detaches the requested event
+	this.eventConfig.htmlRef.detach();              // detaches all events
+	this.eventConfig.htmlRef.events;                // returns object with attached events as properties
+	this.eventConfig.htmlRef.trigger(EVENT NAME);   // calls the handler
 }
+```
 
 These are going to work as well:
+```javascript
 foo.detach();
 foo.detach('name');
 foo.trigger();
@@ -101,5 +106,6 @@ foo.eventConfig;
 foo.eventConfig.htmlRef.hasEvent(EVENT NAME);
 foo.eventConfig.htmlRef.detach(EVENT NAME);
 foo.eventConfig.htmlRef.detach();
-foo.eventConfig.htmlRef.events
-foo.eventConfig.htmlRef.trigger(EVENT NAME)`
+foo.eventConfig.htmlRef.events;
+foo.eventConfig.htmlRef.trigger(EVENT NAME);
+```
