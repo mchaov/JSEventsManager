@@ -1,3 +1,7 @@
+[logo]: https://raw.githubusercontent.com/mchaov/JSEventsManager/master/logo.png "JS Events Manager"
+
+![alt text][logo]
+
 # JSEventsManager
 This Lightweight JS code is intended to solve problems with DOM Events while developing large scale applications, in order to Manage JavaScript DOM events.
 
