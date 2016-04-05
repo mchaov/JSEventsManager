@@ -1,21 +1,16 @@
 # JSEventsManager
-This small piece of JS code is intended to solve problems with DOM Events in development of large scale applications.
-JavaScript DOM events are becoming unmanageable over time.
-
-## Main issues with existing interface (addEventListener)
-
-1. No return value
-2. No way to test if you succeeded in attaching your event without actually performing it
-3. No way accessing an 'event' object from outside the handler
-4. Workarounds for triggering events over elements
-5. No way of triggering only specific handler attached to the same event type on the same element
-6. Hard to manage lambda expressions
-7. No way to detach all event handlers
-8. No good way to do automation testing
+This Lightweight JS code is intended to solve problems with DOM Events while developing large scale applications, in order to Manage JavaScript DOM events.
 
 
-## What/How does UIElement class fixes the issues above
+# Highlights
+1. Testable!
+2. Objects are accessible from outside of the handler.
+3. Straight forward approach for triggering events over elements.
+4. Trigger a specific handler.
+5. Easy to manage lambda expressions.
 
+
+# Features
 1. Return value is object that is instance of UIElement
 2. Check the return value for htmlElement, handler, and configuration on general
 3. Assign the return value to an object property or variable to assume control over it
@@ -26,17 +21,24 @@ JavaScript DOM events are becoming unmanageable over time.
 8. Allows for automation tests to be written using it's interface
 
 
+## Problems with existing interface (addEventListener)
+1. No return value
+2. No way to test if you succeeded in attaching your event without actually performing it
+3. No way accessing an 'event' object from outside the handler
+4. Workarounds for triggering events over elements
+5. No way of triggering only specific handler attached to the same event type on the same element
+6. Hard to manage lambda expressions
+7. No way to detach all event handlers
+8. No good way to do automation testing
+
 
 # Technology behind it
-
 1. JavaScript ES5 Strict
 2. No dependencies to any library
 3. Class like structure, returns objects of it's type with interface to control them
 
 
-
 # Examples
-
 ## Explanation of structure
 ```javascript
 UIElement({
